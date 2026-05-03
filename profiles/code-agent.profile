@@ -204,6 +204,14 @@ blacklist ${HOME}/.m2/settings-security.xml
 blacklist ${HOME}/.gradle/gradle.properties
 blacklist ${HOME}/.cabal/config
 
+blacklist /run/user/*/wayland-*
+blacklist /run/user/*/weston.sock
+blacklist /run/user/*/pipewire-*
+blacklist /run/user/*/.flatpak
+blacklist /run/user/*/bus
+blacklist ${HOME}/.local/share/pipewire
+blacklist ${HOME}/.local/share/xdg-desktop-portal
+
 include disable-common.inc
 include disable-programs.inc
 
@@ -223,6 +231,8 @@ nodvd
 nou2f
 noinput
 nodbus
+nowayland
+nox11
 disable-mnt
 machine-id
 
