@@ -214,7 +214,10 @@ read-only ${HOME}/.poetry/bin
 # Go
 read-only ${HOME}/.go/bin
 read-only ${HOME}/go/bin
+read-only ${HOME}/.gvm
 read-only ${HOME}/.gvm/bin
+read-only ${HOME}/.gvm/go/bin
+read-only ${HOME}/.gvm/tools-bin
 # Java / JVM
 read-only ${HOME}/.sdkman
 read-only ${HOME}/.sdkman/candidates
@@ -241,6 +244,10 @@ read-only ${HOME}/.julia/bin
 read-only ${HOME}/.nimble/bin
 read-only ${HOME}/.zvm/bin
 read-only ${HOME}/.zvm/self
+# Local LLM tooling
+read-only ${HOME}/.lmstudio
+read-only ${HOME}/.lmstudio/bin
+read-only ${HOME}/.lmstudio-home-pointer
 
 ### --- Read-only: editor / IDE configs (extensions + tasks = code) --------
 # tasks.json with `runOptions.runOn:"folderOpen"`, malicious extensions,
