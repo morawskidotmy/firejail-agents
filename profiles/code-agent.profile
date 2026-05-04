@@ -231,8 +231,19 @@ nodvd
 nou2f
 noinput
 nodbus
-nowayland
-nox11
+
+# --- Block GUI access (X11 + Wayland) -------------------------------------
+rmenv DISPLAY
+rmenv WAYLAND_DISPLAY
+rmenv XAUTHORITY
+rmenv XDG_SESSION_TYPE
+blacklist /tmp/.X11-unix
+blacklist /tmp/.ICE-unix
+blacklist ${RUNUSER}/wayland-*
+blacklist ${RUNUSER}/.mutter-Xwaylandauth.*
+blacklist ${HOME}/.Xauthority
+blacklist ${HOME}/.ICEauthority
+
 disable-mnt
 machine-id
 
