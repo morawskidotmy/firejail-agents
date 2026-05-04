@@ -176,6 +176,92 @@ read-only ${HOME}/.vimrc
 read-only ${HOME}/.nanorc
 read-only ${HOME}/.config/nvim
 
+### --- Read-only: bin/shim trees the USER runs OUTSIDE the jail -----------
+# A confined agent must never be able to overwrite an executable that the
+# host user later launches with full privileges. We keep these dirs visible
+# (so the agent can *use* the toolchain) but prevent it from replacing the
+# binaries / shims / trampolines living inside them.
+#
+# If you legitimately need to `npm i -g`, `cargo install`, etc. from inside
+# an agent session, run it with `nojail` instead.
+read-only ${HOME}/.local/bin
+read-only ${HOME}/.local/lib
+read-only ${HOME}/.local/share/applications
+# JS / TS
+read-only ${HOME}/.npm/_npx
+read-only ${HOME}/.volta
+read-only ${HOME}/.volta/bin
+read-only ${HOME}/.volta/tools
+read-only ${HOME}/.bun/bin
+read-only ${HOME}/.deno/bin
+read-only ${HOME}/.nvm
+read-only ${HOME}/.nvm/versions
+read-only ${HOME}/.fnm
+read-only ${HOME}/.fnm/node-versions
+read-only ${HOME}/.fnm/aliases
+read-only ${HOME}/.yarn/bin
+read-only ${HOME}/.pnpm
+read-only ${HOME}/.pnpm-store
+# Rust
+read-only ${HOME}/.cargo
+read-only ${HOME}/.cargo/bin
+read-only ${HOME}/.rustup/toolchains
+# Python
+read-only ${HOME}/.pyenv
+read-only ${HOME}/.pyenv/shims
+read-only ${HOME}/.pyenv/versions
+read-only ${HOME}/.poetry/bin
+# Go
+read-only ${HOME}/.go/bin
+read-only ${HOME}/go/bin
+read-only ${HOME}/.gvm/bin
+# Java / JVM
+read-only ${HOME}/.sdkman
+read-only ${HOME}/.sdkman/candidates
+read-only ${HOME}/.jenv/shims
+read-only ${HOME}/.jenv/versions
+read-only ${HOME}/.gradle/bin
+read-only ${HOME}/.java
+# Ruby
+read-only ${HOME}/.gem/bin
+read-only ${HOME}/.rbenv
+read-only ${HOME}/.rbenv/shims
+read-only ${HOME}/.rbenv/versions
+read-only ${HOME}/.rvm/bin
+read-only ${HOME}/.rvm/rubies
+# PHP / Composer
+read-only ${HOME}/.composer/vendor/bin
+read-only ${HOME}/.config/composer/vendor/bin
+# Haskell / OCaml / others
+read-only ${HOME}/.cabal/bin
+read-only ${HOME}/.ghcup
+read-only ${HOME}/.ghcup/bin
+read-only ${HOME}/.opam
+read-only ${HOME}/.julia/bin
+read-only ${HOME}/.nimble/bin
+read-only ${HOME}/.zvm/bin
+read-only ${HOME}/.zvm/self
+
+### --- Read-only: editor / IDE configs (extensions + tasks = code) --------
+# tasks.json with `runOptions.runOn:"folderOpen"`, malicious extensions,
+# settings.json hooks etc. all execute on the host outside the jail.
+read-only ${HOME}/.vscode-oss
+read-only ${HOME}/.cursor
+read-only ${HOME}/.config/Code
+read-only ${HOME}/.config/Cursor
+
+### --- Read-only: cache trees with host-executed artifacts -----------------
+# Keep general caches writable for day-to-day installs, but freeze cache
+# subtrees that commonly hold executables, hooks, or wheels later run on host.
+read-only ${HOME}/.cache/yarn
+read-only ${HOME}/.cache/pnpm
+read-only ${HOME}/.cache/pip
+read-only ${HOME}/.cache/pypoetry
+read-only ${HOME}/.cache/uv
+read-only ${HOME}/.cache/node/corepack
+read-only ${HOME}/.cache/bun
+read-only ${HOME}/.cache/deno
+
 ### --- Belt-and-braces blacklists for credentials inside whitelisted dirs --
 blacklist ${HOME}/.cache/mozilla
 blacklist ${HOME}/.cache/firefox

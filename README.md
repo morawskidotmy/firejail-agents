@@ -27,6 +27,12 @@ The agent **can** see (so it can actually do its job):
   helm, julia, opam, …
 - Caches (`~/.cache`, `~/.npm`, `~/.local/share`, …) so installs work
 - `~/.gitconfig` / `~/.editorconfig` / `.vimrc` — **read-only**
+- Host-executed shim/bin trees (`~/.volta/bin`, `~/.cargo/bin`, editor config
+  dirs, Amp launcher/config) — **read-only**
+- Agent config homes (`~/.amp`, `~/.claude`, `~/.gemini`, `~/.copilot`, …)
+  are read-only by default (explicit writable state carve-outs only)
+- High-risk executable cache subtrees (`~/.cache/yarn`, `~/.cache/pnpm`,
+  `~/.cache/pip`, …) — **read-only**
 - DNS + outbound network (so package installs and API calls work)
 
 It also: drops all caps, blocks new privileges, applies seccomp, no root,
