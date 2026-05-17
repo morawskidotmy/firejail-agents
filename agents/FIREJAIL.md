@@ -85,7 +85,7 @@ If you hit one of those errors, check this file before retrying.
 5. **If you need to escape**, tell the user to re-run the command as
    `nojail amp …` / `nojail copilot …` / etc. Don't try to break out
    yourself.
-6. **This `AGENTS.md` may be a symlink** that the wrapper drops into
+6. **This `FIREJAIL.md` is a symlink** that the wrapper drops into
    `$PWD` at launch and removes at exit. Don't commit it. Don't delete
    it — but if you see it appear/disappear between runs, that's normal.
 

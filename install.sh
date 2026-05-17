@@ -75,17 +75,19 @@ for p in "${PROFILES[@]}"; do
     fi
 done
 
-# --- install AGENTS.md notice for in-jail agents --------------------------
-say "Installing in-jail AGENTS.md notice"
+# --- install FIREJAIL.md notice for in-jail agents ------------------------
+say "Installing in-jail FIREJAIL.md notice"
 AGENTS_SRC_DIR="$SCRIPT_DIR/agents"
 AGENTS_DST_DIR="$HOME/.agents/firejail"
-[ -f "$AGENTS_SRC_DIR/AGENTS.md" ] || die "missing source: agents/AGENTS.md"
+[ -f "$AGENTS_SRC_DIR/FIREJAIL.md" ] || die "missing source: agents/FIREJAIL.md"
 mkdir -p "$AGENTS_DST_DIR"
-if [ -f "$AGENTS_DST_DIR/AGENTS.md" ] && cmp -s "$AGENTS_SRC_DIR/AGENTS.md" "$AGENTS_DST_DIR/AGENTS.md"; then
-    ok "AGENTS.md (unchanged) at $AGENTS_DST_DIR/AGENTS.md"
+# Clean up the old AGENTS.md name from previous installs, if present.
+[ -f "$AGENTS_DST_DIR/AGENTS.md" ] && rm -f "$AGENTS_DST_DIR/AGENTS.md"
+if [ -f "$AGENTS_DST_DIR/FIREJAIL.md" ] && cmp -s "$AGENTS_SRC_DIR/FIREJAIL.md" "$AGENTS_DST_DIR/FIREJAIL.md"; then
+    ok "FIREJAIL.md (unchanged) at $AGENTS_DST_DIR/FIREJAIL.md"
 else
-    cp "$AGENTS_SRC_DIR/AGENTS.md" "$AGENTS_DST_DIR/AGENTS.md"
-    ok "AGENTS.md installed at $AGENTS_DST_DIR/AGENTS.md"
+    cp "$AGENTS_SRC_DIR/FIREJAIL.md" "$AGENTS_DST_DIR/FIREJAIL.md"
+    ok "FIREJAIL.md installed at $AGENTS_DST_DIR/FIREJAIL.md"
 fi
 
 # --- validate profile parses ----------------------------------------------

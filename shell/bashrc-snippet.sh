@@ -19,33 +19,20 @@ _code_agent_jail() {
     [ -S "$sock" ] && container_host_env=(--env="CONTAINER_HOST=unix://$sock")
 
     # Drop the firejail notice into $PWD so agents read it on startup.
-    # Always link a dedicated FIREJAIL.md (so it coexists with any
-    # project AGENTS.md). Additionally link AGENTS.md only when the
-    # project doesn't already have one (so Amp/etc auto-pick it up
-    # without clobbering the project's own).
-    # Each cleanup only removes the file if it's still our symlink
-    # pointing at our source — never a project-owned file.
-    local notice_src="$HOME/.agents/firejail/AGENTS.md"
+    # We only ever link FIREJAIL.md — never AGENTS.md — so we cannot
+    # collide with or shadow a project's own AGENTS.md. Cleanup removes
+    # the file only if it's still our symlink pointing at our source.
+    local notice_src="$HOME/.agents/firejail/FIREJAIL.md"
     local notice_firejail="$cwd/FIREJAIL.md"
-    local notice_agents="$cwd/AGENTS.md"
-    local firejail_installed=0 agents_installed=0
-    if [ -f "$notice_src" ]; then
-        if [ ! -e "$notice_firejail" ] && [ ! -L "$notice_firejail" ]; then
-            ln -s "$notice_src" "$notice_firejail" 2>/dev/null && firejail_installed=1
-        fi
-        if [ ! -e "$notice_agents" ] && [ ! -L "$notice_agents" ]; then
-            ln -s "$notice_src" "$notice_agents" 2>/dev/null && agents_installed=1
-        fi
+    local firejail_installed=0
+    if [ -f "$notice_src" ] && [ ! -e "$notice_firejail" ] && [ ! -L "$notice_firejail" ]; then
+        ln -s "$notice_src" "$notice_firejail" 2>/dev/null && firejail_installed=1
     fi
     _code_agent_cleanup_notice() {
-        local target
         if [ "$firejail_installed" = "1" ] && [ -L "$notice_firejail" ]; then
+            local target
             target="$(readlink "$notice_firejail" 2>/dev/null || true)"
             [ "$target" = "$notice_src" ] && rm -f "$notice_firejail"
-        fi
-        if [ "$agents_installed" = "1" ] && [ -L "$notice_agents" ]; then
-            target="$(readlink "$notice_agents" 2>/dev/null || true)"
-            [ "$target" = "$notice_src" ] && rm -f "$notice_agents"
         fi
     }
     trap _code_agent_cleanup_notice EXIT INT TERM HUP
