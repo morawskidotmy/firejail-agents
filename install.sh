@@ -75,6 +75,19 @@ for p in "${PROFILES[@]}"; do
     fi
 done
 
+# --- install AGENTS.md notice for in-jail agents --------------------------
+say "Installing in-jail AGENTS.md notice"
+AGENTS_SRC_DIR="$SCRIPT_DIR/agents"
+AGENTS_DST_DIR="$HOME/.agents/firejail"
+[ -f "$AGENTS_SRC_DIR/AGENTS.md" ] || die "missing source: agents/AGENTS.md"
+mkdir -p "$AGENTS_DST_DIR"
+if [ -f "$AGENTS_DST_DIR/AGENTS.md" ] && cmp -s "$AGENTS_SRC_DIR/AGENTS.md" "$AGENTS_DST_DIR/AGENTS.md"; then
+    ok "AGENTS.md (unchanged) at $AGENTS_DST_DIR/AGENTS.md"
+else
+    cp "$AGENTS_SRC_DIR/AGENTS.md" "$AGENTS_DST_DIR/AGENTS.md"
+    ok "AGENTS.md installed at $AGENTS_DST_DIR/AGENTS.md"
+fi
+
 # --- validate profile parses ----------------------------------------------
 say "Validating profile syntax"
 if firejail --quiet --profile="$PROFILE_DIR/amp.profile" /bin/true >/dev/null 2>&1; then

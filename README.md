@@ -82,6 +82,25 @@ the originals:
 
 For an air-gapped run, put `net none` in `code-agent.local`.
 
+## Podman / containers
+
+Local rootless podman cannot run inside the jail — `noroot` + `nonewprivs`
++ `seccomp` block the user-namespace setup it requires. Instead the agent
+talks to a `podman system service` running on the **host** via the
+rootless API socket.
+
+Enable it once:
+
+```sh
+systemctl --user enable --now podman.socket
+```
+
+The shell wrappers detect `/run/user/$UID/podman/podman.sock` and inject
+`CONTAINER_HOST=unix://…` automatically, so `podman ps`, `podman build`,
+`run-podman.sh`, etc. just work from inside the jail. Builds and
+containers run on the host (outside the sandbox); only the client is
+confined.
+
 ## Files
 
 - `code-agent.profile` — shared base profile (whitelist mode, hardening,

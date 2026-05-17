@@ -11,11 +11,56 @@ _code_agent_jail() {
     # _code_agent_jail <profile> <real-binary> [args…]
     local profile="$1" bin="$2"; shift 2
     local cwd="${PWD:A}"   # absolute, symlink-resolved
+    # Point in-jail podman at the host's rootless socket (option B).
+    # Start it on the host with: systemctl --user enable --now podman.socket
+    local sock="${XDG_RUNTIME_DIR:-/run/user/$(id -u)}/podman/podman.sock"
+    local -a container_host_env
+    [[ -S "$sock" ]] && container_host_env=(--env="CONTAINER_HOST=unix://$sock")
+
+    # Drop the firejail notice into $PWD so agents read it on startup.
+    # Always link a dedicated FIREJAIL.md (so it coexists with any
+    # project AGENTS.md). Additionally link AGENTS.md only when the
+    # project doesn't already have one (so Amp/etc auto-pick it up
+    # without clobbering the project's own).
+    # Each cleanup only removes the file if it's still our symlink
+    # pointing at our source — never a project-owned file.
+    local notice_src="$HOME/.agents/firejail/AGENTS.md"
+    local notice_firejail="$cwd/FIREJAIL.md"
+    local notice_agents="$cwd/AGENTS.md"
+    local firejail_installed=0 agents_installed=0
+    if [[ -f "$notice_src" ]]; then
+        if [[ ! -e "$notice_firejail" && ! -L "$notice_firejail" ]]; then
+            ln -s "$notice_src" "$notice_firejail" 2>/dev/null && firejail_installed=1
+        fi
+        if [[ ! -e "$notice_agents" && ! -L "$notice_agents" ]]; then
+            ln -s "$notice_src" "$notice_agents" 2>/dev/null && agents_installed=1
+        fi
+    fi
+    _code_agent_cleanup_notice() {
+        local target
+        if [[ "$firejail_installed" == "1" && -L "$notice_firejail" ]]; then
+            target="$(readlink "$notice_firejail" 2>/dev/null)"
+            [[ "$target" == "$notice_src" ]] && rm -f "$notice_firejail"
+        fi
+        if [[ "$agents_installed" == "1" && -L "$notice_agents" ]]; then
+            target="$(readlink "$notice_agents" 2>/dev/null)"
+            [[ "$target" == "$notice_src" ]] && rm -f "$notice_agents"
+        fi
+    }
+    trap _code_agent_cleanup_notice EXIT INT TERM HUP
+
+    local rc=0
     command firejail \
         --quiet \
         --profile="$HOME/.config/firejail/${profile}.profile" \
         --whitelist="$cwd" \
-        --   "$bin" "$@"
+        $container_host_env \
+        --   "$bin" "$@" || rc=$?
+
+    _code_agent_cleanup_notice
+    trap - EXIT INT TERM HUP
+    unset -f _code_agent_cleanup_notice
+    return "$rc"
 }
 
 # Find each agent's real binary once, then expose a wrapper function.

@@ -69,6 +69,169 @@ noblacklist ${HOME}/.lmstudio
 noblacklist ${HOME}/.ollama
 noblacklist ${HOME}/.cache
 noblacklist ${HOME}/.local
+# Podman (rootless): config + local image/container store + runtime sockets.
+noblacklist ${HOME}/.config/containers
+noblacklist ${HOME}/.local/share/containers
+noblacklist ${HOME}/.cache/containers
+noblacklist /run/podman
+noblacklist /run/user/*/podman
+# Version managers
+noblacklist ${HOME}/.asdf
+noblacklist ${HOME}/.config/asdf
+noblacklist ${HOME}/.config/mise
+noblacklist ${HOME}/.local/share/mise
+noblacklist ${HOME}/.local/state/mise
+# Build / package systems
+noblacklist ${HOME}/.bazel
+noblacklist ${HOME}/.cache/bazel
+noblacklist ${HOME}/.cache/bazelisk
+noblacklist ${HOME}/.bazelisk
+noblacklist ${HOME}/.cache/buck
+noblacklist ${HOME}/.buck2
+noblacklist ${HOME}/.cache/buck2
+noblacklist ${HOME}/.cache/pants
+noblacklist ${HOME}/.cache/pants.d
+noblacklist ${HOME}/.conan
+noblacklist ${HOME}/.conan2
+noblacklist ${HOME}/.cmake
+noblacklist ${HOME}/.vcpkg
+noblacklist ${HOME}/.config/vcpkg
+noblacklist ${HOME}/.cache/ccache
+noblacklist ${HOME}/.ccache
+noblacklist ${HOME}/.cache/sccache
+noblacklist ${HOME}/.config/sccache
+noblacklist ${HOME}/.cache/mold
+# Python ecosystem (extra)
+noblacklist ${HOME}/.local/pipx
+noblacklist ${HOME}/.local/share/pipx
+noblacklist ${HOME}/.local/state/pipx
+noblacklist ${HOME}/.local/share/hatch
+noblacklist ${HOME}/.local/share/pdm
+noblacklist ${HOME}/.config/pdm
+noblacklist ${HOME}/.rye
+noblacklist ${HOME}/.tox
+noblacklist ${HOME}/.cache/pre-commit
+noblacklist ${HOME}/.cache/maturin
+noblacklist ${HOME}/.conda
+noblacklist ${HOME}/.config/conda
+noblacklist ${HOME}/miniconda3
+noblacklist ${HOME}/anaconda3
+noblacklist ${HOME}/mambaforge
+noblacklist ${HOME}/miniforge3
+noblacklist ${HOME}/.pixi
+# Erlang / Elixir
+noblacklist ${HOME}/.mix
+noblacklist ${HOME}/.hex
+noblacklist ${HOME}/.config/rebar3
+noblacklist ${HOME}/.cache/rebar3
+noblacklist ${HOME}/.kerl
+# Lua
+noblacklist ${HOME}/.luarocks
+noblacklist ${HOME}/.config/luarocks
+noblacklist ${HOME}/.cache/luarocks
+# R
+noblacklist ${HOME}/.R
+noblacklist ${HOME}/R
+noblacklist ${HOME}/.Renviron
+noblacklist ${HOME}/.Rprofile
+noblacklist ${HOME}/.cache/R
+# Lean / theorem provers
+noblacklist ${HOME}/.elan
+noblacklist ${HOME}/.cache/mathlib
+# Swift
+noblacklist ${HOME}/.swiftpm
+noblacklist ${HOME}/.config/swiftpm
+noblacklist ${HOME}/.cache/swift
+# Clojure
+noblacklist ${HOME}/.clojure
+noblacklist ${HOME}/.config/clojure
+noblacklist ${HOME}/.lein
+noblacklist ${HOME}/.boot
+noblacklist ${HOME}/.cpcache
+noblacklist ${HOME}/.deps.clj
+noblacklist ${HOME}/.gitlibs
+noblacklist ${HOME}/.m2/repository
+# Crystal / D / Nim / Zig / Gleam / Roc
+noblacklist ${HOME}/.cache/crystal
+noblacklist ${HOME}/.crystal
+noblacklist ${HOME}/.dub
+noblacklist ${HOME}/.cache/zig
+noblacklist ${HOME}/.zig
+noblacklist ${HOME}/.cache/gleam
+noblacklist ${HOME}/.cache/roc
+# Common Lisp / Scheme / Racket
+noblacklist ${HOME}/.racket
+noblacklist ${HOME}/.config/racket
+noblacklist ${HOME}/.roswell
+noblacklist ${HOME}/.quicklisp
+noblacklist ${HOME}/.sbclrc
+noblacklist ${HOME}/.cache/chicken-install
+noblacklist ${HOME}/.chicken
+# Wasm
+noblacklist ${HOME}/.wasmer
+noblacklist ${HOME}/.wasmtime
+noblacklist ${HOME}/.wasmedge
+# DevOps / k8s / IaC tooling
+noblacklist ${HOME}/.docker
+noblacklist ${HOME}/.skaffold
+noblacklist ${HOME}/.tilt-dev
+noblacklist ${HOME}/.config/k9s
+noblacklist ${HOME}/.config/lazygit
+noblacklist ${HOME}/.config/lazydocker
+noblacklist ${HOME}/.config/gh-dash
+noblacklist ${HOME}/.kustomize
+noblacklist ${HOME}/.config/kustomize
+noblacklist ${HOME}/.config/helmfile
+noblacklist ${HOME}/.cache/helm
+noblacklist ${HOME}/.cache/kubectl
+noblacklist ${HOME}/.config/kind
+noblacklist ${HOME}/.minikube
+noblacklist ${HOME}/.config/k3d
+noblacklist ${HOME}/.config/colima
+noblacklist ${HOME}/.colima
+# Direnv / asdf-style task runners
+noblacklist ${HOME}/.config/direnv
+noblacklist ${HOME}/.local/share/direnv
+noblacklist ${HOME}/.cache/direnv
+noblacklist ${HOME}/.local/share/devbox
+noblacklist ${HOME}/.local/share/devenv
+# Shell config
+noblacklist ${HOME}/.config/nushell
+noblacklist ${HOME}/.config/fish
+noblacklist ${HOME}/.config/starship.toml
+noblacklist ${HOME}/.cache/starship
+noblacklist ${HOME}/.config/oh-my-posh
+noblacklist ${HOME}/.config/zoxide
+noblacklist ${HOME}/.local/share/zoxide
+noblacklist ${HOME}/.cache/zsh
+noblacklist ${HOME}/.zsh
+noblacklist ${HOME}/.oh-my-zsh
+noblacklist ${HOME}/.config/atuin
+noblacklist ${HOME}/.local/share/atuin
+# Misc dev tooling caches
+noblacklist ${HOME}/.cache/go-build
+noblacklist ${HOME}/.cache/golangci-lint
+noblacklist ${HOME}/.cache/goimports
+noblacklist ${HOME}/.cache/typescript
+noblacklist ${HOME}/.cache/eslint
+noblacklist ${HOME}/.cache/prettier
+noblacklist ${HOME}/.cache/ruff
+noblacklist ${HOME}/.cache/mypy
+noblacklist ${HOME}/.cache/pyright
+noblacklist ${HOME}/.cache/pytest_cache
+noblacklist ${HOME}/.cache/jest
+noblacklist ${HOME}/.cache/vitest
+noblacklist ${HOME}/.cache/cypress
+noblacklist ${HOME}/.cache/playwright
+noblacklist ${HOME}/.cache/ms-playwright
+noblacklist ${HOME}/.cache/puppeteer
+noblacklist ${HOME}/.cache/turborepo
+noblacklist ${HOME}/.cache/nx
+noblacklist ${HOME}/.cache/rush
+noblacklist ${HOME}/.rush
+noblacklist ${HOME}/.cache/gradle
+noblacklist ${HOME}/.cache/coursier
+noblacklist ${HOME}/.coursier
 
 ### --- Dev config (mostly read-only) --------------------------------------
 whitelist ${HOME}/.gitconfig
@@ -161,6 +324,168 @@ whitelist ${HOME}/.config/Cursor
 whitelist ${HOME}/.lmstudio
 whitelist ${HOME}/.lmstudio-home-pointer
 whitelist ${HOME}/.ollama
+# --- Extra version managers ---------------------------------------------
+whitelist ${HOME}/.asdf
+whitelist ${HOME}/.config/asdf
+whitelist ${HOME}/.config/mise
+whitelist ${HOME}/.local/share/mise
+whitelist ${HOME}/.local/state/mise
+# --- Extra build / native toolchains ------------------------------------
+whitelist ${HOME}/.bazel
+whitelist ${HOME}/.cache/bazel
+whitelist ${HOME}/.bazelisk
+whitelist ${HOME}/.cache/bazelisk
+whitelist ${HOME}/.buck2
+whitelist ${HOME}/.cache/buck
+whitelist ${HOME}/.cache/buck2
+whitelist ${HOME}/.cache/pants
+whitelist ${HOME}/.cache/pants.d
+whitelist ${HOME}/.conan
+whitelist ${HOME}/.conan2
+whitelist ${HOME}/.cmake
+whitelist ${HOME}/.vcpkg
+whitelist ${HOME}/.config/vcpkg
+whitelist ${HOME}/.cache/ccache
+whitelist ${HOME}/.ccache
+whitelist ${HOME}/.cache/sccache
+whitelist ${HOME}/.config/sccache
+whitelist ${HOME}/.cache/mold
+# --- Extra Python tooling -----------------------------------------------
+whitelist ${HOME}/.local/pipx
+whitelist ${HOME}/.local/share/pipx
+whitelist ${HOME}/.local/state/pipx
+whitelist ${HOME}/.local/share/hatch
+whitelist ${HOME}/.local/share/pdm
+whitelist ${HOME}/.config/pdm
+whitelist ${HOME}/.rye
+whitelist ${HOME}/.tox
+whitelist ${HOME}/.cache/pre-commit
+whitelist ${HOME}/.cache/maturin
+whitelist ${HOME}/.conda
+whitelist ${HOME}/.config/conda
+whitelist ${HOME}/miniconda3
+whitelist ${HOME}/anaconda3
+whitelist ${HOME}/mambaforge
+whitelist ${HOME}/miniforge3
+whitelist ${HOME}/.pixi
+# --- Erlang / Elixir / Lua / R / Lean / Swift / Clojure / Crystal / D / Zig / Wasm ----
+whitelist ${HOME}/.mix
+whitelist ${HOME}/.hex
+whitelist ${HOME}/.config/rebar3
+whitelist ${HOME}/.cache/rebar3
+whitelist ${HOME}/.kerl
+whitelist ${HOME}/.luarocks
+whitelist ${HOME}/.config/luarocks
+whitelist ${HOME}/.cache/luarocks
+whitelist ${HOME}/.R
+whitelist ${HOME}/R
+whitelist ${HOME}/.Renviron
+whitelist ${HOME}/.Rprofile
+whitelist ${HOME}/.cache/R
+whitelist ${HOME}/.elan
+whitelist ${HOME}/.swiftpm
+whitelist ${HOME}/.config/swiftpm
+whitelist ${HOME}/.cache/swift
+whitelist ${HOME}/.clojure
+whitelist ${HOME}/.config/clojure
+whitelist ${HOME}/.lein
+whitelist ${HOME}/.boot
+whitelist ${HOME}/.cpcache
+whitelist ${HOME}/.deps.clj
+whitelist ${HOME}/.gitlibs
+whitelist ${HOME}/.cache/crystal
+whitelist ${HOME}/.crystal
+whitelist ${HOME}/.dub
+whitelist ${HOME}/.cache/zig
+whitelist ${HOME}/.zig
+whitelist ${HOME}/.cache/gleam
+whitelist ${HOME}/.cache/roc
+whitelist ${HOME}/.racket
+whitelist ${HOME}/.config/racket
+whitelist ${HOME}/.roswell
+whitelist ${HOME}/.quicklisp
+whitelist ${HOME}/.sbclrc
+whitelist ${HOME}/.cache/chicken-install
+whitelist ${HOME}/.chicken
+whitelist ${HOME}/.wasmer
+whitelist ${HOME}/.wasmtime
+whitelist ${HOME}/.wasmedge
+# --- Extra DevOps / k8s / IaC -------------------------------------------
+whitelist ${HOME}/.docker
+whitelist ${HOME}/.skaffold
+whitelist ${HOME}/.tilt-dev
+whitelist ${HOME}/.config/k9s
+whitelist ${HOME}/.config/lazygit
+whitelist ${HOME}/.config/lazydocker
+whitelist ${HOME}/.config/gh-dash
+whitelist ${HOME}/.kustomize
+whitelist ${HOME}/.config/kustomize
+whitelist ${HOME}/.config/helmfile
+whitelist ${HOME}/.cache/helm
+whitelist ${HOME}/.cache/kubectl
+whitelist ${HOME}/.config/kind
+whitelist ${HOME}/.minikube
+whitelist ${HOME}/.config/k3d
+whitelist ${HOME}/.config/colima
+whitelist ${HOME}/.colima
+# --- Direnv / devbox / devenv -------------------------------------------
+whitelist ${HOME}/.config/direnv
+whitelist ${HOME}/.local/share/direnv
+whitelist ${HOME}/.cache/direnv
+whitelist ${HOME}/.local/share/devbox
+whitelist ${HOME}/.local/share/devenv
+# --- Shell config (read-only later) -------------------------------------
+whitelist ${HOME}/.config/nushell
+whitelist ${HOME}/.config/fish
+whitelist ${HOME}/.config/starship.toml
+whitelist ${HOME}/.cache/starship
+whitelist ${HOME}/.config/oh-my-posh
+whitelist ${HOME}/.config/zoxide
+whitelist ${HOME}/.local/share/zoxide
+whitelist ${HOME}/.cache/zsh
+whitelist ${HOME}/.zsh
+whitelist ${HOME}/.oh-my-zsh
+whitelist ${HOME}/.config/atuin
+whitelist ${HOME}/.local/share/atuin
+# --- Common dev caches ---------------------------------------------------
+whitelist ${HOME}/.cache/go-build
+whitelist ${HOME}/.cache/golangci-lint
+whitelist ${HOME}/.cache/goimports
+whitelist ${HOME}/.cache/typescript
+whitelist ${HOME}/.cache/eslint
+whitelist ${HOME}/.cache/prettier
+whitelist ${HOME}/.cache/ruff
+whitelist ${HOME}/.cache/mypy
+whitelist ${HOME}/.cache/pyright
+whitelist ${HOME}/.cache/pytest_cache
+whitelist ${HOME}/.cache/jest
+whitelist ${HOME}/.cache/vitest
+whitelist ${HOME}/.cache/cypress
+whitelist ${HOME}/.cache/playwright
+whitelist ${HOME}/.cache/ms-playwright
+whitelist ${HOME}/.cache/puppeteer
+whitelist ${HOME}/.cache/turborepo
+whitelist ${HOME}/.cache/nx
+whitelist ${HOME}/.cache/rush
+whitelist ${HOME}/.rush
+whitelist ${HOME}/.cache/gradle
+whitelist ${HOME}/.cache/coursier
+whitelist ${HOME}/.coursier
+# Podman (REMOTE socket pattern only — local rootless podman is incompatible
+# with `noroot` + `nonewprivs` + `seccomp` below). The agent talks to a
+# `podman system service` running on the host via CONTAINER_HOST. The shell
+# wrapper injects CONTAINER_HOST=unix:///run/user/$UID/podman/podman.sock
+# automatically when that socket exists.
+#
+# Enable on the host with:  systemctl --user enable --now podman.socket
+#
+# auth.json (registry creds) is blacklisted below.
+whitelist ${HOME}/.config/containers
+whitelist ${HOME}/.local/share/containers
+whitelist ${HOME}/.cache/containers
+# Rootless API socket dir — the only path the in-jail client needs.
+whitelist /run/user/*/podman
+read-write /run/user/*/podman
 
 ### --- Read-only: prevent the agent rewriting your dev identity -----------
 read-only ${HOME}/.gitconfig
@@ -292,6 +617,8 @@ blacklist ${HOME}/.gem/credentials
 blacklist ${HOME}/.composer/auth.json
 blacklist ${HOME}/.config/composer/auth.json
 blacklist ${HOME}/.docker/config.json
+blacklist ${HOME}/.config/containers/auth.json
+blacklist ${RUNUSER}/containers/auth.json
 blacklist ${HOME}/.m2/settings.xml
 blacklist ${HOME}/.m2/settings-security.xml
 blacklist ${HOME}/.gradle/gradle.properties
@@ -350,4 +677,4 @@ netfilter
 dns 1.1.1.1
 dns 9.9.9.9
 
-private-etc alternatives,ca-certificates,crypto-policies,resolv.conf,hosts,host.conf,hostname,nsswitch.conf,localtime,timezone,ssl,pki,gai.conf,protocols,services,login.defs,passwd,group,shells,terminfo,fonts,gitconfig,gitattributes,profile,profile.d,bash.bashrc,zsh,inputrc,nanorc,vimrc,vim,xdg,java-*,maven,gradle
+private-etc alternatives,ca-certificates,crypto-policies,resolv.conf,hosts,host.conf,hostname,nsswitch.conf,localtime,timezone,ssl,pki,gai.conf,protocols,services,login.defs,passwd,group,shells,terminfo,fonts,gitconfig,gitattributes,profile,profile.d,bash.bashrc,zsh,inputrc,nanorc,vimrc,vim,xdg,java-*,maven,gradle,containers,subuid,subgid,cni,networks
