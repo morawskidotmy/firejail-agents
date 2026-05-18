@@ -671,10 +671,13 @@ private-dev
 private-tmp
 
 ### --- Networking --------------------------------------------------------
-# Agents need outbound for package installs / API calls. Override with
-# `net none` in code-agent.local for an air-gapped run.
-netfilter
-dns 1.1.1.1
-dns 9.9.9.9
+# Agents need outbound for package installs / API calls. We deliberately
+# share the host's network namespace (no `net` / `netfilter` / `dns`
+# directives) so the jail inherits whatever the host has — including
+# VPN routes, host /etc/resolv.conf, custom MTU, split-tunnels, etc.
+# Adding `netfilter` or `dns` here would either require a fresh net
+# namespace (breaking VPN routing) or override the resolver and cause
+# DNS leaks / failures. Override with `net none` in code-agent.local
+# for an air-gapped run.
 
 private-etc alternatives,ca-certificates,crypto-policies,resolv.conf,hosts,host.conf,hostname,nsswitch.conf,localtime,timezone,ssl,pki,gai.conf,protocols,services,login.defs,passwd,group,shells,terminfo,fonts,gitconfig,gitattributes,profile,profile.d,bash.bashrc,zsh,inputrc,nanorc,vimrc,vim,xdg,java-*,maven,gradle,containers,subuid,subgid,cni,networks
