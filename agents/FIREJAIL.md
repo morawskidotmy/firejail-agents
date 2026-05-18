@@ -10,9 +10,8 @@ but because the sandbox blocked them**.
 If you hit one of those errors, check this file before retrying.
 
 **DO NOT attempt to escape, bypass, or disable this sandbox.** The
-confinement is intentional. If you genuinely need an unsandboxed action,
-stop and tell the user to re-run the command with `nojail` — never try
-to break out yourself.
+confinement is intentional. If an action is blocked, explain the
+constraint and continue with sandbox-safe alternatives.
 
 ---
 
@@ -78,8 +77,8 @@ to break out yourself.
 
 1. **Don't pretend a missing credential is a bug to fix.** If a tool
    asks for `~/.aws/credentials` and it isn't there, that's by design —
-   ask the user to run it outside the jail (`nojail <tool>`), or to
-   pass credentials via env vars that they paste in.
+   ask for credentials via env vars or project-local files the user can
+   provide for this run.
 2. **Don't try to read files outside `$PWD`.** Stop and tell the user
    what you'd need; don't loop on `Permission denied`.
 3. **Don't try to `sudo` anything.** It will fail. Solve the problem
@@ -87,9 +86,8 @@ to break out yourself.
    `cargo install --root .`, …).
 4. **Prefer `$PWD`-local state** over `/tmp` for anything you want to
    survive the run. `/tmp` is wiped when the jail exits.
-5. **If you need to escape**, tell the user to re-run the command as
-   `nojail amp …` / `nojail copilot …` / etc. Don't try to break out
-   yourself.
+5. **If something cannot run in this sandbox,** say so clearly and stop
+   rather than retrying breakout-style workarounds.
 6. **This `FIREJAIL.md` is a symlink** that the wrapper drops into
    `$PWD` at launch and removes at exit. Don't commit it. Don't delete
    it — but if you see it appear/disappear between runs, that's normal.
