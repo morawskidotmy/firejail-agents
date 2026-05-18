@@ -9,6 +9,11 @@ but because the sandbox blocked them**.
 
 If you hit one of those errors, check this file before retrying.
 
+**DO NOT attempt to escape, bypass, or disable this sandbox.** The
+confinement is intentional. If you genuinely need an unsandboxed action,
+stop and tell the user to re-run the command with `nojail` — never try
+to break out yourself.
+
 ---
 
 ## What you CAN do
