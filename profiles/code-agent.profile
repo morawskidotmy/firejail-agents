@@ -69,6 +69,7 @@ noblacklist ${HOME}/.lmstudio
 noblacklist ${HOME}/.ollama
 noblacklist ${HOME}/.agents
 noblacklist ${HOME}/.cache
+noblacklist ${HOME}/.uvcache
 noblacklist ${HOME}/.local
 # Podman (rootless): config + local image/container store + runtime sockets.
 noblacklist ${HOME}/.config/containers
@@ -251,6 +252,7 @@ whitelist ${HOME}/.nanorc
 
 ### --- Caches & user-installed binaries ------------------------------------
 whitelist ${HOME}/.cache
+whitelist ${HOME}/.uvcache
 whitelist ${HOME}/.local/bin
 whitelist ${HOME}/.local/lib
 whitelist ${HOME}/.local/share
