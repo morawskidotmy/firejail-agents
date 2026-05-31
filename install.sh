@@ -53,10 +53,18 @@ mkdir -p "$PROFILE_DIR"
 ok "profile dir: $PROFILE_DIR"
 
 # --- copy/update profiles -------------------------------------------------
+# We auto-discover everything under profiles/*.profile so adding a new agent
+# is just "drop foo.profile in profiles/" — no installer edits required.
 say "Installing / updating profiles"
-PROFILES=(code-agent.profile amp.profile copilot.profile claude.profile gemini.profile aider.profile)
 PROFILES_DIR="$SCRIPT_DIR/profiles"
 [ -d "$PROFILES_DIR" ] || die "missing profiles/ directory"
+
+PROFILES=()
+for f in "$PROFILES_DIR"/*.profile; do
+    [ -e "$f" ] || die "no *.profile files under profiles/"
+    PROFILES+=("$(basename -- "$f")")
+done
+
 for p in "${PROFILES[@]}"; do
     [ -f "$PROFILES_DIR/$p" ] || die "missing source: profiles/$p"
     if [ -f "$PROFILE_DIR/$p" ] && cmp -s "$PROFILES_DIR/$p" "$PROFILE_DIR/$p"; then
@@ -91,12 +99,16 @@ else
 fi
 
 # --- validate profile parses ----------------------------------------------
+# Validate every profile we just installed, not just amp's. A bad profile is
+# a silent runtime failure otherwise — better to catch it at install time.
 say "Validating profile syntax"
-if firejail --quiet --profile="$PROFILE_DIR/amp.profile" /bin/true >/dev/null 2>&1; then
-    ok "amp.profile parses"
-else
-    warn "amp.profile failed to parse — run: firejail --profile=$PROFILE_DIR/amp.profile /bin/true"
-fi
+for p in "${PROFILES[@]}"; do
+    if firejail --quiet --profile="$PROFILE_DIR/$p" /bin/true >/dev/null 2>&1; then
+        ok "$p parses"
+    else
+        warn "$p failed to parse — debug with: firejail --profile=$PROFILE_DIR/$p /bin/true"
+    fi
+done
 
 # --- shell wrappers -------------------------------------------------------
 SHELL_DIR="$SCRIPT_DIR/shell"
@@ -135,7 +147,7 @@ inject_into_rc() {
         ok "$name: snippet updated in $rc"
     else
         {
-            printf '\n\n# Added by caged install.sh on %s\n' \
+            printf '\n\n# Added by firejail-agents install.sh on %s\n' \
                    "$(date -Iseconds 2>/dev/null || date)"
             cat "$snippet"
         } >> "$rc"
@@ -181,16 +193,55 @@ case "$INSTALL_SHELL" in
     *)     die "unknown shell: $INSTALL_SHELL" ;;
 esac
 
+# --- per-profile summary --------------------------------------------------
+# Show the user exactly which agents will get a sandbox wrapper in their new
+# shell, and which won't (because the binary isn't on $PATH yet). The shell
+# snippets only wrap commands resolvable via `command -v <name>`, so this
+# mirrors their decision at install time.
+echo
+say "Summary"
+
+# Profile names that are NOT agents themselves (base / included only).
+is_base_profile() { [ "$1" = "code-agent" ]; }
+
+WRAPPED=()
+MISSING=()
+for p in "${PROFILES[@]}"; do
+    name="${p%.profile}"
+    is_base_profile "$name" && continue
+    if bin="$(command -v "$name" 2>/dev/null)" && [ -n "$bin" ]; then
+        WRAPPED+=("$name -> $bin")
+    else
+        MISSING+=("$name")
+    fi
+done
+
+if [ "${#WRAPPED[@]}" -gt 0 ]; then
+    echo "  These commands will be sandboxed in a new shell:"
+    for w in "${WRAPPED[@]}"; do
+        printf '    %s %s\n' "$(c_green '✓')" "$w"
+    done
+fi
+if [ "${#MISSING[@]}" -gt 0 ]; then
+    echo
+    echo "  Profiles installed but the binary is NOT on \$PATH (so no wrapper):"
+    for m in "${MISSING[@]}"; do
+        printf '    %s %s\n' "$(c_yellow '!')" "$m"
+    done
+    echo
+    echo "  Fix by adding the tool to your \$PATH or symlinking it, e.g.:"
+    echo "      ln -s ~/.amp/bin/amp     ~/.local/bin/amp"
+    echo "      ln -s ~/.volta/bin/gemini ~/.local/bin/gemini"
+    echo "  (See README.md → 'PATH requirement'.)"
+fi
+
 echo
 say "Done. Open a new shell, then:"
 cat <<'EOF'
 
       cd ~/some/project
-      amp           # confined to ~/some/project + dev toolchains
-      copilot       # same
-      claude        # same
-      gemini        # same
-      aider         # same
+      <agent>       # e.g. amp / copilot / claude / gemini / aider
+                    # confined to ~/some/project + dev toolchains
       nojail amp    # escape hatch (no sandbox)
 
   Customise via ~/.config/firejail/<tool>.local files (see README.md).

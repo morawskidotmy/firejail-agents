@@ -51,21 +51,25 @@ _code_agent_jail() {
     return "$rc"
 }
 
-# Helper: build a wrapper function for one agent if its binary exists.
-_code_agent_wrap() {
-    local name="$1" bin="$2"
-    [ -x "$bin" ] || return 0
-    # printf %q quotes safely under bash
-    eval "$(printf '%s() { _code_agent_jail %s %q "$@"; }' "$name" "$name" "$bin")"
-}
-
-_code_agent_wrap amp     "$HOME/.amp/bin/amp"
-_code_agent_wrap copilot "$HOME/.local/bin/copilot"
-_code_agent_wrap claude  "$HOME/.local/bin/claude"
-_code_agent_wrap gemini  "$HOME/.volta/bin/gemini"
-_code_agent_wrap aider   "$(command -v aider 2>/dev/null)"
-
-unset -f _code_agent_wrap
+# The set of jailed commands is derived from whatever profiles you have
+# installed under ~/.config/firejail/<name>.profile. For each profile,
+# the matching command must be resolvable via `command -v <name>` — i.e.
+# on your $PATH. (Install agents into ~/.local/bin or symlink them there.)
+# Drop in a new profile → wrapper appears next shell. Remove the profile →
+# wrapper disappears. Base/included profiles (code-agent) are skipped.
+_code_agent_profile_dir="${XDG_CONFIG_HOME:-$HOME/.config}/firejail"
+if [ -d "$_code_agent_profile_dir" ]; then
+    for _cap in "$_code_agent_profile_dir"/*.profile; do
+        [ -e "$_cap" ] || continue           # no profiles installed
+        _can="$(basename -- "$_cap" .profile)"
+        case "$_can" in code-agent) continue ;; esac   # base profile, not an agent
+        _cab="$(command -v "$_can" 2>/dev/null || true)"
+        [ -n "$_cab" ] && [ -x "$_cab" ] || continue
+        # printf %q quotes safely under bash
+        eval "$(printf '%s() { _code_agent_jail %s %q "$@"; }' "$_can" "$_can" "$_cab")"
+    done
+fi
+unset _code_agent_profile_dir _cap _can _cab
 
 # Escape hatch: run an agent (or anything) with no jail, e.g.  nojail amp
 nojail() { command "$@"; }

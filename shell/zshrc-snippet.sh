@@ -50,17 +50,22 @@ _code_agent_jail() {
     return "$rc"
 }
 
-# Find each agent's real binary once, then expose a wrapper function.
+# The set of jailed commands is derived from whatever profiles you have
+# installed under ~/.config/firejail/<name>.profile. For each profile,
+# the matching command must be resolvable via `command -v <name>` — i.e.
+# on your $PATH. (Install agents into ~/.local/bin or symlink them there.)
+# Drop in a new profile → wrapper appears next shell. Remove the profile →
+# wrapper disappears. Base/included profiles (code-agent) are skipped.
 () {
-    local name path
-    for name path in \
-            amp     "$HOME/.amp/bin/amp" \
-            copilot "$HOME/.local/bin/copilot" \
-            claude  "$HOME/.local/bin/claude" \
-            gemini  "$HOME/.volta/bin/gemini" \
-            aider   "$(command -v aider 2>/dev/null)"; do
-        [[ -x "$path" ]] || continue
-        eval "${name}() { _code_agent_jail ${name} ${(q)path} \"\$@\"; }"
+    local profile_dir="${XDG_CONFIG_HOME:-$HOME/.config}/firejail"
+    [[ -d "$profile_dir" ]] || return 0
+    local p name bin
+    for p in "$profile_dir"/*.profile(N); do
+        name="${${p:t}:r}"                 # basename without .profile
+        [[ "$name" == "code-agent" ]] && continue   # base profile, not an agent
+        bin="$(command -v "$name" 2>/dev/null)"
+        [[ -n "$bin" && -x "$bin" ]] || continue
+        eval "${name}() { _code_agent_jail ${name} ${(q)bin} \"\$@\"; }"
     done
 }
 
