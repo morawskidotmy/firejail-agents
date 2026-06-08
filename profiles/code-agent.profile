@@ -20,6 +20,7 @@ noblacklist ${HOME}/.m2
 noblacklist ${HOME}/.gem
 noblacklist ${HOME}/.bundle
 noblacklist ${HOME}/.npm
+noblacklist ${HOME}/bin
 noblacklist ${HOME}/.pnpm
 noblacklist ${HOME}/.yarn
 noblacklist ${HOME}/.config/yarn
@@ -253,6 +254,7 @@ whitelist ${HOME}/.nanorc
 ### --- Caches & user-installed binaries ------------------------------------
 whitelist ${HOME}/.cache
 whitelist ${HOME}/.uvcache
+whitelist ${HOME}/bin
 whitelist ${HOME}/.local/bin
 whitelist ${HOME}/.local/lib
 whitelist ${HOME}/.local/share
@@ -516,6 +518,7 @@ read-only ${HOME}/.agents
 #
 # If you legitimately need to `npm i -g`, `cargo install`, etc. from inside
 # an agent session, run it with `nojail` instead.
+read-only ${HOME}/bin
 read-only ${HOME}/.local/bin
 read-only ${HOME}/.local/lib
 read-only ${HOME}/.local/share/applications
