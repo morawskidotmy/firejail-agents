@@ -1,0 +1,7 @@
+# Local overrides for Codex profile.
+# This file is included by codex.profile and can be used for per-machine tweaks
+# without modifying the shared profile.
+#
+# Example:
+#   whitelist /path/to/extra/dir
+#   read-only /path/to/protected/dir
