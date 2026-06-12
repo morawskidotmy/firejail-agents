@@ -494,6 +494,8 @@ read-write /run/user/*/podman
 
 # firejail-agents notice source for the per-project $PWD/FIREJAIL.md symlink.
 whitelist ${HOME}/.agents
+read-only ${HOME}/.agents
+read-write ${HOME}/.agents/skills
 
 ### --- Read-only: prevent the agent rewriting your dev identity -----------
 read-only ${HOME}/.gitconfig
@@ -508,7 +510,7 @@ read-only ${HOME}/.nvmrc
 read-only ${HOME}/.vimrc
 read-only ${HOME}/.nanorc
 read-only ${HOME}/.config/nvim
-read-only ${HOME}/.agents
+
 
 ### --- Read-only: bin/shim trees the USER runs OUTSIDE the jail -----------
 # A confined agent must never be able to overwrite an executable that the
