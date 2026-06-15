@@ -651,8 +651,12 @@ include disable-programs.inc
 caps.drop all
 nonewprivs
 noroot
-seccomp
+
+# Keep Firejail's default seccomp filter, then block extra kernel attack
+# surfaces that coding agents and build tools should not need.
+seccomp add_key,request_key,keyctl,bpf,perf_event_open,userfaultfd,io_uring_setup,io_uring_enter,io_uring_register,ptrace,process_vm_readv,process_vm_writev,process_madvise,kcmp,pidfd_getfd,setns,unshare,mount,umount2,pivot_root,chroot,open_tree,move_mount,fsopen,fsconfig,fsmount,fspick,name_to_handle_at,open_by_handle_at,init_module,finit_module,delete_module,kexec_load,kexec_file_load,iopl,ioperm,swapon,swapoff,reboot,acct,syslog,personality,modify_ldt
 seccomp.block-secondary
+restrict-namespaces
 protocol unix,inet,inet6,netlink
 
 nosound
