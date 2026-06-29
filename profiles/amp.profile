@@ -3,14 +3,14 @@ include amp.local
 
 # Whitelist Amp's own config/state.
 whitelist ${HOME}/.amp
-whitelist ${HOME}/.amp/state
 whitelist ${HOME}/.config/amp
 
 # The agent must not be able to overwrite its own launcher binary — that
 # would persist a backdoor that runs unsandboxed on the next `amp` invocation.
-# Treat Amp's home/config as code-loading surfaces; allow writes only in state/.
-read-only ${HOME}/.amp
-read-write ${HOME}/.amp/state
-read-only ${HOME}/.config/amp
+# The binary lives in ~/.amp/bin, so freeze just that. The rest of ~/.amp
+# (e.g. file-changes/) and ~/.config/amp (settings.json + write-meta) MUST
+# stay writable: Amp updates these on every startup and bails out with
+# "Unexpected error inside Amp CLI" if they are read-only.
+read-only ${HOME}/.amp/bin
 
 include code-agent.profile
