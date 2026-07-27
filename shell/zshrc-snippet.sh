@@ -52,20 +52,19 @@ _code_agent_jail() {
 
 # The set of jailed commands is derived from whatever profiles you have
 # installed under ~/.config/firejail/<name>.profile. For each profile,
-# the matching command must be resolvable via `command -v <name>` — i.e.
-# on your $PATH. (Install agents into ~/.local/bin or symlink them there.)
-# Drop in a new profile → wrapper appears next shell. Remove the profile →
-# wrapper disappears. Base/included profiles (code-agent) are skipped.
+# the matching command is looked up on $PATH at call time — so the
+# wrapper works even if the binary's directory is added to $PATH later
+# in your rc file. Drop in a new profile → wrapper appears next shell.
+# Remove the profile → wrapper disappears.
+# Base/included profiles (code-agent) are skipped.
 () {
     local profile_dir="${XDG_CONFIG_HOME:-$HOME/.config}/firejail"
     [[ -d "$profile_dir" ]] || return 0
-    local p name bin
+    local p name
     for p in "$profile_dir"/*.profile(N); do
         name="${${p:t}:r}"                 # basename without .profile
         [[ "$name" == "code-agent" ]] && continue   # base profile, not an agent
-        bin="$(command -v "$name" 2>/dev/null)"
-        [[ -n "$bin" && -x "$bin" ]] || continue
-        eval "${name}() { _code_agent_jail ${name} ${(q)bin} \"\$@\"; }"
+        eval "${name}() { local b=\"\$(whence -p ${name} 2>/dev/null)\"; [[ -x \"\$b\" ]] || { echo \"${name}: not found on PATH\" >&2; return 127; }; _code_agent_jail ${name} \"\$b\" \"\$@\"; }"
     done
 }
 

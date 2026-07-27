@@ -194,10 +194,10 @@ case "$INSTALL_SHELL" in
 esac
 
 # --- per-profile summary --------------------------------------------------
-# Show the user exactly which agents will get a sandbox wrapper in their new
-# shell, and which won't (because the binary isn't on $PATH yet). The shell
-# snippets only wrap commands resolvable via `command -v <name>`, so this
-# mirrors their decision at install time.
+# Show the user which agent binaries are on $PATH (will be sandboxed at
+# call time) and which profiles are installed but whose binaries aren't
+# on $PATH yet (wrappers are still created — the binary is resolved at
+# call time, so a later PATH addition works fine).
 echo
 say "Summary"
 
@@ -217,19 +217,21 @@ for p in "${PROFILES[@]}"; do
 done
 
 if [ "${#WRAPPED[@]}" -gt 0 ]; then
-    echo "  These commands will be sandboxed in a new shell:"
+    echo "  Agent wrappers created for commands on your \$PATH:"
     for w in "${WRAPPED[@]}"; do
         printf '    %s %s\n' "$(c_green '✓')" "$w"
     done
 fi
 if [ "${#MISSING[@]}" -gt 0 ]; then
     echo
-    echo "  Profiles installed but the binary is NOT on \$PATH (so no wrapper):"
+    echo "  Profiles installed (wrappers created) but binary not yet on \$PATH:"
     for m in "${MISSING[@]}"; do
         printf '    %s %s\n' "$(c_yellow '!')" "$m"
     done
     echo
-    echo "  Fix by adding the tool to your \$PATH or symlinking it, e.g.:"
+    echo "  Wrappers are created for all installed profiles — the binary is"
+    echo "  looked up at call time, so it can be added to \$PATH after the"
+    echo "  snippet runs. To install a missing tool:"
     echo "      ln -s ~/.amp/bin/amp     ~/.local/bin/amp"
     echo "      ln -s ~/.volta/bin/gemini ~/.local/bin/gemini"
     echo "  (See README.md → 'PATH requirement'.)"

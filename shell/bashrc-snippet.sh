@@ -53,23 +53,21 @@ _code_agent_jail() {
 
 # The set of jailed commands is derived from whatever profiles you have
 # installed under ~/.config/firejail/<name>.profile. For each profile,
-# the matching command must be resolvable via `command -v <name>` — i.e.
-# on your $PATH. (Install agents into ~/.local/bin or symlink them there.)
-# Drop in a new profile → wrapper appears next shell. Remove the profile →
-# wrapper disappears. Base/included profiles (code-agent) are skipped.
+# the matching command is looked up on $PATH at call time — so the
+# wrapper works even if the binary's directory is added to $PATH later
+# in your rc file. Drop in a new profile → wrapper appears next shell.
+# Remove the profile → wrapper disappears.
+# Base/included profiles (code-agent) are skipped.
 _code_agent_profile_dir="${XDG_CONFIG_HOME:-$HOME/.config}/firejail"
 if [ -d "$_code_agent_profile_dir" ]; then
     for _cap in "$_code_agent_profile_dir"/*.profile; do
         [ -e "$_cap" ] || continue           # no profiles installed
         _can="$(basename -- "$_cap" .profile)"
         case "$_can" in code-agent) continue ;; esac   # base profile, not an agent
-        _cab="$(command -v "$_can" 2>/dev/null || true)"
-        [ -n "$_cab" ] && [ -x "$_cab" ] || continue
-        # printf %q quotes safely under bash
-        eval "$(printf '%s() { _code_agent_jail %s %q "$@"; }' "$_can" "$_can" "$_cab")"
+        eval "$(printf '%s() { local b="$(type -P %s)"; [ -x "$b" ] || { echo "%s: not found on PATH" >&2; return 127; }; _code_agent_jail %s "$b" "$@"; }' "$_can" "$_can" "$_can" "$_can")"
     done
 fi
-unset _code_agent_profile_dir _cap _can _cab
+unset _code_agent_profile_dir _cap _can
 
 # Escape hatch: run an agent (or anything) with no jail, e.g.  nojail amp
 nojail() { command "$@"; }
