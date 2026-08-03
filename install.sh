@@ -1,12 +1,14 @@
 #!/usr/bin/env bash
 # firejail-agents — install/update firejail profiles + shell wrappers for coding agents.
 #
-# Usage:   bash install.sh [--no-shell] [--shell=zsh|bash|both|auto]
+# Usage:   bash install.sh [--no-shell] [--shell=zsh|bash|xonsh|both|all|auto]
 #
 #   --no-shell      install profiles only, skip shell rc edits
 #   --shell=zsh     install zsh wrappers into ~/.zshrc
 #   --shell=bash    install bash wrappers into ~/.bashrc
-#   --shell=both    install into both
+#   --shell=xonsh   install Xonsh wrappers into ~/.xonshrc
+#   --shell=both    install into both zsh and bash
+#   --shell=all     install into zsh, bash, and Xonsh
 #   --shell=auto    detect from $SHELL (default)
 #
 # Idempotent + updating: re-running replaces the snippet block in your rc
@@ -26,7 +28,9 @@ for arg in "$@"; do
         --no-shell)        INSTALL_SHELL="none" ;;
         --shell=zsh)       INSTALL_SHELL="zsh" ;;
         --shell=bash)      INSTALL_SHELL="bash" ;;
+        --shell=xonsh)     INSTALL_SHELL="xonsh" ;;
         --shell=both)      INSTALL_SHELL="both" ;;
+        --shell=all)       INSTALL_SHELL="all" ;;
         --shell=auto)      INSTALL_SHELL="auto" ;;
         -h|--help)         sed -n '2,16p' "$0"; exit 0 ;;
         *)                 echo "Unknown arg: $arg" >&2; exit 2 ;;
@@ -114,9 +118,11 @@ done
 SHELL_DIR="$SCRIPT_DIR/shell"
 ZSH_SNIPPET="$SHELL_DIR/zshrc-snippet.sh"
 BASH_SNIPPET="$SHELL_DIR/bashrc-snippet.sh"
+XONSH_SNIPPET="$SHELL_DIR/xonshrc-snippet.xsh"
 [ -d "$SHELL_DIR" ]    || die "missing shell/ directory"
 [ -f "$ZSH_SNIPPET" ]  || die "missing shell/zshrc-snippet.sh"
 [ -f "$BASH_SNIPPET" ] || die "missing shell/bashrc-snippet.sh"
+[ -f "$XONSH_SNIPPET" ] || die "missing shell/xonshrc-snippet.xsh"
 
 BEGIN='# ▰▱▰▱▰  firejail-agents: BEGIN  ▰▱▰▱▰'
 END='# ▰▱▰▱▰  firejail-agents: END  ▰▱▰▱▰'
@@ -159,8 +165,11 @@ detect_shell() {
     case "$(basename -- "${SHELL:-}")" in
         zsh)  echo "zsh"  ;;
         bash) echo "bash" ;;
+        xonsh) echo "xonsh" ;;
         *)
-            if command -v zsh >/dev/null 2>&1 && [ -f "$HOME/.zshrc" ]; then
+            if command -v xonsh >/dev/null 2>&1 && [ -f "$HOME/.xonshrc" ]; then
+                echo "xonsh"
+            elif command -v zsh >/dev/null 2>&1 && [ -f "$HOME/.zshrc" ]; then
                 echo "zsh"
             elif [ -f "$HOME/.bashrc" ] || command -v bash >/dev/null 2>&1; then
                 echo "bash"
@@ -182,13 +191,21 @@ case "$INSTALL_SHELL" in
         echo "    Source one of these manually:"
         echo "      $ZSH_SNIPPET"
         echo "      $BASH_SNIPPET"
+        echo "      $XONSH_SNIPPET"
         ;;
     zsh)   say "Installing/updating zsh wrappers";  inject_into_rc "$HOME/.zshrc"  "$ZSH_SNIPPET"  "zsh" ;;
     bash)  say "Installing/updating bash wrappers"; inject_into_rc "$HOME/.bashrc" "$BASH_SNIPPET" "bash" ;;
+    xonsh) say "Installing/updating Xonsh wrappers"; inject_into_rc "$HOME/.xonshrc" "$XONSH_SNIPPET" "xonsh" ;;
     both)
         say "Installing/updating zsh + bash wrappers"
         inject_into_rc "$HOME/.zshrc"  "$ZSH_SNIPPET"  "zsh"
         inject_into_rc "$HOME/.bashrc" "$BASH_SNIPPET" "bash"
+        ;;
+    all)
+        say "Installing/updating zsh + bash + Xonsh wrappers"
+        inject_into_rc "$HOME/.zshrc"  "$ZSH_SNIPPET"  "zsh"
+        inject_into_rc "$HOME/.bashrc" "$BASH_SNIPPET" "bash"
+        inject_into_rc "$HOME/.xonshrc" "$XONSH_SNIPPET" "xonsh"
         ;;
     *)     die "unknown shell: $INSTALL_SHELL" ;;
 esac

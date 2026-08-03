@@ -6,7 +6,7 @@
 
 [![License: AGPL-3.0](https://img.shields.io/badge/license-AGPL--3.0-blue.svg?style=flat-square)](LICENSE)
 [![Firejail](https://img.shields.io/badge/sandbox-firejail-orange.svg?style=flat-square)](https://firejail.wordpress.com/)
-[![Shells](https://img.shields.io/badge/shell-bash%20%7C%20zsh-89e051.svg?style=flat-square)](#install)
+[![Shells](https://img.shields.io/badge/shell-bash%20%7C%20zsh%20%7C%20xonsh-89e051.svg?style=flat-square)](#install)
 [![Topics](https://img.shields.io/badge/topics-sandbox%20·%20agents%20·%20devtools-555.svg?style=flat-square)](https://github.com/morawskidotmy/firejail-agents)
 
 [Why](#why) • [How it works](#how-it-works) • [Install](#install) • [Use](#use) • [Add your own agent](#add-your-own-agent) • [Customise](#customise)
@@ -53,7 +53,7 @@ and one `install.sh`.
 - **Profiles** (`~/.config/firejail/<agent>.profile`) declare what's
   visible, what's read-only, and what's blocked. Each per-tool profile
   inherits a shared `code-agent.profile` base.
-- **Shell snippet** (in your `~/.bashrc` or `~/.zshrc`) auto-discovers
+- **Shell snippet** (in your `~/.bashrc`, `~/.zshrc`, or `~/.xonshrc`) auto-discovers
   installed profiles at shell startup and wraps every matching command
   with `firejail --whitelist="$PWD" …`.
 - **In-jail notice** (`FIREJAIL.md`) is symlinked into `$PWD` on launch,
@@ -111,9 +111,11 @@ git clone https://github.com/morawskidotmy/firejail-agents /tmp/firejail-agents 
 **Or step by step:**
 
 ```sh
-bash install.sh                # auto-detect zsh/bash, install everything
+bash install.sh                # auto-detect zsh/bash/Xonsh, install everything
 bash install.sh --no-shell     # profiles only, skip rc edits
 bash install.sh --shell=both   # patch both ~/.zshrc and ~/.bashrc
+bash install.sh --shell=xonsh  # patch ~/.xonshrc
+bash install.sh --shell=all    # patch all three rc files
 ```
 
 The installer is idempotent — re-running won't double up. Existing
@@ -254,7 +256,7 @@ rm -rf ~/.agents/firejail
 
 # 3. Strip the snippet block from your rc(s).
 sed -i '/▰▱▰▱▰  firejail-agents: BEGIN/,/▰▱▰▱▰  firejail-agents: END/d' \
-    ~/.zshrc ~/.bashrc 2>/dev/null || true
+    ~/.zshrc ~/.bashrc ~/.xonshrc 2>/dev/null || true
 ```
 
 ## Project layout
@@ -271,7 +273,8 @@ firejail-agents/
 │   └── aider.profile
 ├── shell/
 │   ├── bashrc-snippet.sh   ← scans ~/.config/firejail/*.profile and wraps
-│   └── zshrc-snippet.sh      every profile whose name is on $PATH
+│   ├── zshrc-snippet.sh      every profile whose name is on $PATH
+│   └── xonshrc-snippet.xsh
 └── agents/
     └── FIREJAIL.md         ← "you are in a firejail" notice; symlinked into
                               $PWD on agent launch, removed on exit
