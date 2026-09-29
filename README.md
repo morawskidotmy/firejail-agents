@@ -79,6 +79,11 @@ The agent **cannot** see (or exfiltrate via *"please run this curl…"*):
 > (credentials read-only) so agents can run `gh` and `git push`.
 > Remove the `whitelist` lines for these in
 > `profiles/code-agent.profile` to lock them down again.
+>
+> The Hugging Face CLI (`~/.hf-cli`) and its Hub credentials/cache
+> (`~/.cache/huggingface`) are also **allowed** so agents can run
+> `hf auth login` / `hf push` and download models. Remove the `whitelist`
+> lines for these in `profiles/code-agent.profile` to lock them down again.
 - Anything else under `$HOME` that isn't on the dev allow-list
 - **Sibling project directories** — `cd ..` doesn't escape the jail
 

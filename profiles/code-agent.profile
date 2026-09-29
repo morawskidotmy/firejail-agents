@@ -72,6 +72,10 @@ noblacklist ${HOME}/.agents
 noblacklist ${HOME}/.cache
 noblacklist ${HOME}/.uvcache
 noblacklist ${HOME}/.local
+# Hugging Face (hf CLI venv + Hub creds/cache) — enabled so agents can push.
+noblacklist ${HOME}/.hf-cli
+noblacklist ${HOME}/.cache/huggingface
+noblacklist ${HOME}/.huggingface
 # Podman (rootless): config + local image/container store + runtime sockets.
 noblacklist ${HOME}/.config/containers
 noblacklist ${HOME}/.local/share/containers
@@ -334,6 +338,11 @@ whitelist ${HOME}/.config/Cursor
 whitelist ${HOME}/.lmstudio
 whitelist ${HOME}/.lmstudio-home-pointer
 whitelist ${HOME}/.ollama
+# Hugging Face — `hf` CLI venv + Hub credentials/cache. Token is writable so
+# `hf auth login` / `hf push` work from inside the jail.
+whitelist ${HOME}/.hf-cli
+whitelist ${HOME}/.cache/huggingface
+whitelist ${HOME}/.huggingface
 # --- Extra version managers ---------------------------------------------
 whitelist ${HOME}/.asdf
 whitelist ${HOME}/.config/asdf
@@ -529,6 +538,9 @@ read-only ${HOME}/bin
 read-only ${HOME}/.local/bin
 read-only ${HOME}/.local/lib
 read-only ${HOME}/.local/share/applications
+# Hugging Face CLI venv — visible so `hf` runs, but read-only so the agent
+# can't replace an executable the host user launches outside the jail.
+read-only ${HOME}/.hf-cli/venv/bin
 # JS / TS
 read-only ${HOME}/.npm/_npx
 read-only ${HOME}/.volta

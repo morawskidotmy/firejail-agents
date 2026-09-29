@@ -55,6 +55,10 @@ constraint and continue with sandbox-safe alternatives.
   - **Exception**: `~/.config/gh` and `~/.git-credentials` **are**
     visible (read-only for the credentials) so `gh` and `git push`
     work.
+  - **Exception**: the Hugging Face CLI (`~/.hf-cli`) and its Hub
+    credentials/cache (`~/.cache/huggingface`) **are** visible, so
+    `hf auth login`, `hf push`, and model downloads work. The `hf`
+    binary is read-only.
   - **Sibling project directories**: you cannot `cd ..` or read
     `~/Documents/other-project`. Only `$PWD` and its subtree are
     visible.
