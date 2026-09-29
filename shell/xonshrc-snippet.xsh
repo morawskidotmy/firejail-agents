@@ -45,7 +45,7 @@ def _code_agent_jail(profile: str, binary: str, args: list[str]) -> int:
     try:
         if os.path.exists(sock) and stat.S_ISSOCK(os.stat(sock).st_mode):
             cmd.append(f"--env=CONTAINER_HOST=unix://{sock}")
-        return subprocess.call(cmd + ["--", binary] + list(args))
+        return subprocess.call(cmd + [binary] + list(args))
     finally:
         if firejail_installed and os.path.islink(notice_firejail):
             try:
@@ -58,7 +58,7 @@ def _code_agent_jail(profile: str, binary: str, args: list[str]) -> int:
 def _make_jail_wrapper(agent_name: str):
     """Create a Xonsh callable alias for a jailed agent."""
     def _wrapper(args, stdin=None, stdout=None, stderr=None, spec=None):
-        binary = shutil.which(agent_name)
+        binary = shutil.which(agent_name, path=os.pathsep.join(map(str, $PATH)))
         if not binary:
             print(f"{agent_name}: not found on PATH", file=sys.stderr)
             return 127
@@ -72,7 +72,11 @@ def _code_agent_nojail(args, stdin=None, stdout=None, stderr=None, spec=None):
     if not args:
         print("usage: nojail command [args ...]", file=sys.stderr)
         return 2
-    return subprocess.call(list(args))
+    binary = shutil.which(args[0], path=os.pathsep.join(map(str, $PATH)))
+    if not binary:
+        print(f"{args[0]}: not found on PATH", file=sys.stderr)
+        return 127
+    return subprocess.call([binary] + list(args[1:]))
 
 
 # Derive aliases from installed profiles. The executable is resolved at call

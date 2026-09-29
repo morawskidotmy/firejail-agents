@@ -42,16 +42,19 @@ constraint and continue with sandbox-safe alternatives.
 
 - **You cannot see anything else under `$HOME`.** Specifically blocked:
   - SSH / GPG: `~/.ssh`, `~/.gnupg`, `~/.password-store`
-  - Cloud creds: `~/.aws`, `~/.azure`, `~/.kube`, `~/.config/gh`,
-    `~/.config/gcloud`, `~/.docker/config.json`
+  - Cloud creds: `~/.aws`, `~/.azure`, `~/.kube`, `~/.config/gcloud`,
+    `~/.docker/config.json`
   - Browser profiles: Firefox, Chrome, Brave, Vivaldi, Edge, Opera, …
   - Chat / mail: Discord, Slack, Signal, Element, Telegram,
     Thunderbird, …
   - Crypto wallets: Electrum, Bitcoin, Ethereum, Exodus, Ledger,
     Trezor, …
   - Token files: `.npmrc` (auth), `.pypirc`, `.netrc`,
-    `.git-credentials`, `cargo/credentials.toml`, `m2/settings.xml`, …
+    `cargo/credentials.toml`, `m2/settings.xml`, …
   - Anything else under `$HOME` not on the dev allow-list above.
+  - **Exception**: `~/.config/gh` and `~/.git-credentials` **are**
+    visible (read-only for the credentials) so `gh` and `git push`
+    work.
   - **Sibling project directories**: you cannot `cd ..` or read
     `~/Documents/other-project`. Only `$PWD` and its subtree are
     visible.

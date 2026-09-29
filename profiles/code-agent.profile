@@ -181,6 +181,7 @@ noblacklist ${HOME}/.tilt-dev
 noblacklist ${HOME}/.config/k9s
 noblacklist ${HOME}/.config/lazygit
 noblacklist ${HOME}/.config/lazydocker
+noblacklist ${HOME}/.config/gh
 noblacklist ${HOME}/.config/gh-dash
 noblacklist ${HOME}/.kustomize
 noblacklist ${HOME}/.config/kustomize
@@ -242,6 +243,10 @@ whitelist ${HOME}/.config/git
 whitelist ${HOME}/.gitignore_global
 whitelist ${HOME}/.editorconfig
 whitelist ${HOME}/.tool-versions
+# GitHub CLI + git HTTPS credentials — enabled so the agent can `gh` and push.
+whitelist ${HOME}/.config/gh
+whitelist ${HOME}/.git-credentials
+read-only ${HOME}/.git-credentials
 whitelist ${HOME}/.python-version
 whitelist ${HOME}/.node-version
 whitelist ${HOME}/.ruby-version
@@ -620,8 +625,7 @@ blacklist ${HOME}/.cargo/credentials
 blacklist ${HOME}/.npmrc
 blacklist ${HOME}/.pypirc
 blacklist ${HOME}/.netrc
-blacklist ${HOME}/.git-credentials
-blacklist ${HOME}/.config/git/credentials
+# git/gh HTTPS creds are deliberately allowed for push (see whitelist above).
 blacklist ${HOME}/.config/pip/pip.conf
 blacklist ${HOME}/.config/pypoetry/auth.toml
 blacklist ${HOME}/.config/uv/credentials.toml

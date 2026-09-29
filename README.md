@@ -65,14 +65,20 @@ and one `install.sh`.
 The agent **cannot** see (or exfiltrate via *"please run this curl…"*):
 
 - `~/.ssh`, `~/.gnupg`, `~/.password-store`
-- Cloud creds: `~/.aws`, `~/.azure`, `~/.kube`, `~/.config/gh`,
-  `~/.config/gcloud`, `~/.docker/config.json`
+- Cloud creds: `~/.aws`, `~/.azure`, `~/.kube`, `~/.config/gcloud`,
+  `~/.docker/config.json`
 - Browser profiles: Firefox, Chrome, Brave, Vivaldi, Edge, Opera, …
 - Chat / mail apps: Discord, Slack, Signal, Element, Telegram,
   Thunderbird, …
 - Crypto wallets: Electrum, Bitcoin, Ethereum, Exodus, Ledger, Trezor, …
-- Token files: `.npmrc`, `.pypirc`, `.netrc`, `.git-credentials`,
+- Token files: `.npmrc`, `.pypirc`, `.netrc`,
   `cargo/credentials.toml`, `.docker/config.json`, `m2/settings.xml`, …
+
+> [!NOTE]
+> `~/.config/gh` and `~/.git-credentials` are deliberately **allowed**
+> (credentials read-only) so agents can run `gh` and `git push`.
+> Remove the `whitelist` lines for these in
+> `profiles/code-agent.profile` to lock them down again.
 - Anything else under `$HOME` that isn't on the dev allow-list
 - **Sibling project directories** — `cd ..` doesn't escape the jail
 
