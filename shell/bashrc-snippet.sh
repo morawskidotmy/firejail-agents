@@ -7,9 +7,32 @@
 # To bypass the jail for one invocation:    nojail amp …
 # To peek at what the jail sees:            firejail --profile=amp --whitelist="$PWD" ls ~
 
+_ensure_vertex_proxy() {
+    # Check if Vertex proxy is responding on port 8000
+    if curl -s --connect-timeout 1 http://127.0.0.1:8000/health >/dev/null 2>&1; then
+        return 0
+    fi
+    local cfg="$HOME/litellm/config.yaml"
+    [ -f "$cfg" ] || return 0
+    local uvx_bin
+    uvx_bin="$(command -v uvx 2>/dev/null || echo "$HOME/.local/bin/uvx")"
+    [ -x "$uvx_bin" ] || return 0
+
+    nohup "$uvx_bin" --from "litellm[proxy,google]" litellm --config "$cfg" --port 8000 >/dev/null 2>&1 &
+    local i
+    for i in {1..25}; do
+        sleep 0.2
+        if curl -s --connect-timeout 1 http://127.0.0.1:8000/health >/dev/null 2>&1; then
+            return 0
+        fi
+    done
+    return 1
+}
+
 _code_agent_jail() {
     # _code_agent_jail <profile> <real-binary> [args…]
     local profile="$1" bin="$2"; shift 2
+    _ensure_vertex_proxy
     local cwd
     cwd="$(cd -P -- "$PWD" && pwd)"   # absolute, symlink-resolved
     # Point in-jail podman at the host's rootless socket (option B).
@@ -70,5 +93,9 @@ fi
 unset _code_agent_profile_dir _cap _can
 
 # Escape hatch: run an agent (or anything) with no jail, e.g.  nojail amp
-nojail() { command "$@"; }
+nojail() {
+    _ensure_vertex_proxy
+    command "$@"
+}
+ensure_vertex_proxy() { _ensure_vertex_proxy; }
 # ▰▱▰▱▰  firejail-agents: END  ▰▱▰▱▰

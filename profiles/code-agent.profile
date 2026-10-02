@@ -76,6 +76,8 @@ noblacklist ${HOME}/.local
 noblacklist ${HOME}/.hf-cli
 noblacklist ${HOME}/.cache/huggingface
 noblacklist ${HOME}/.huggingface
+# browselenium.online (browser automation API key)
+noblacklist ${HOME}/.config/browselenium.online
 # Podman (rootless): config + local image/container store + runtime sockets.
 noblacklist ${HOME}/.config/containers
 noblacklist ${HOME}/.local/share/containers
@@ -343,6 +345,8 @@ whitelist ${HOME}/.ollama
 whitelist ${HOME}/.hf-cli
 whitelist ${HOME}/.cache/huggingface
 whitelist ${HOME}/.huggingface
+# browselenium.online — API key for browser automation
+whitelist ${HOME}/.config/browselenium.online
 # --- Extra version managers ---------------------------------------------
 whitelist ${HOME}/.asdf
 whitelist ${HOME}/.config/asdf
@@ -711,5 +715,11 @@ private-tmp
 # namespace (breaking VPN routing) or override the resolver and cause
 # DNS leaks / failures. Override with `net none` in code-agent.local
 # for an air-gapped run.
+
+# Local model/API proxies (LiteLLM on 127.0.0.1:8000 for Vertex/Gemini, vLLM,
+# Ollama, LM Studio, ...) run on the host and are reachable from the jail
+# through loopback because the network namespace is shared — no extra rules
+# are needed. Use 127.0.0.1 (not "localhost") in the agent's baseURL so
+# resolution can never pick IPv6 ::1 while the proxy only listens on an IPv4 socket.
 
 private-etc alternatives,ca-certificates,crypto-policies,resolv.conf,hosts,host.conf,hostname,nsswitch.conf,localtime,timezone,ssl,pki,gai.conf,protocols,services,login.defs,passwd,group,shells,terminfo,fonts,gitconfig,gitattributes,profile,profile.d,bash.bashrc,zsh,inputrc,nanorc,vimrc,vim,xdg,java-*,maven,gradle,containers,subuid,subgid,cni,networks

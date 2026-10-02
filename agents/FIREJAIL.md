@@ -59,6 +59,8 @@ constraint and continue with sandbox-safe alternatives.
     credentials/cache (`~/.cache/huggingface`) **are** visible, so
     `hf auth login`, `hf push`, and model downloads work. The `hf`
     binary is read-only.
+  - **Exception**: `~/.config/browselenium.online` **is** visible,
+    so browselenium.online browser automation API key works.
   - **Sibling project directories**: you cannot `cd ..` or read
     `~/Documents/other-project`. Only `$PWD` and its subtree are
     visible.

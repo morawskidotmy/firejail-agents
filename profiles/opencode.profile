@@ -10,4 +10,8 @@ whitelist ${HOME}/.local/share/opencode
 read-only ${HOME}/.opencode
 read-only ${HOME}/.config/opencode
 
+# Local OpenAI-compatible proxies (e.g. LiteLLM on 127.0.0.1:8000 for Vertex/Gemini)
+# are reachable via loopback since the jail shares the host network namespace.
+# Configure the provider baseURL with 127.0.0.1, not "localhost".
+
 include code-agent.profile

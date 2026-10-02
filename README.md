@@ -84,6 +84,11 @@ The agent **cannot** see (or exfiltrate via *"please run this curl…"*):
 > (`~/.cache/huggingface`) are also **allowed** so agents can run
 > `hf auth login` / `hf push` and download models. Remove the `whitelist`
 > lines for these in `profiles/code-agent.profile` to lock them down again.
+>
+> browselenium.online configuration (`~/.config/browselenium.online`) is
+> also **allowed** so agents can access the API key for browser automation.
+> Remove the `whitelist` line in `profiles/code-agent.profile` to lock it
+> down again.
 - Anything else under `$HOME` that isn't on the dev allow-list
 - **Sibling project directories** — `cd ..` doesn't escape the jail
 

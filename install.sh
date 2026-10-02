@@ -250,6 +250,7 @@ if [ "${#MISSING[@]}" -gt 0 ]; then
     echo "  looked up at call time, so it can be added to \$PATH after the"
     echo "  snippet runs. To install a missing tool:"
     echo "      ln -s ~/.amp/bin/amp     ~/.local/bin/amp"
+    echo "      ln -s ~/.bun/bin/omp     ~/.local/bin/omp"
     echo "      ln -s ~/.volta/bin/gemini ~/.local/bin/gemini"
     echo "  (See README.md → 'PATH requirement'.)"
 fi
@@ -259,7 +260,7 @@ say "Done. Open a new shell, then:"
 cat <<'EOF'
 
       cd ~/some/project
-      <agent>       # e.g. amp / copilot / claude / gemini / aider
+      <agent>       # e.g. amp / copilot / claude / gemini / aider / omp
                     # confined to ~/some/project + dev toolchains
       nojail amp    # escape hatch (no sandbox)
 
