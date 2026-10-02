@@ -510,6 +510,14 @@ whitelist ${HOME}/.cache/containers
 whitelist /run/user/*/podman
 read-write /run/user/*/podman
 
+# Wayland and X11 display/auth (for clipboard access: xclip, wl-copy, etc.)
+whitelist /run/user/*/wayland-*
+read-write /run/user/*/wayland-*
+whitelist /run/user/*/.mutter-Xwaylandauth.*
+read-only /run/user/*/.mutter-Xwaylandauth.*
+whitelist ${HOME}/.Xauthority
+read-only ${HOME}/.Xauthority
+
 # firejail-agents notice source for the per-project $PWD/FIREJAIL.md symlink.
 whitelist ${HOME}/.agents
 read-only ${HOME}/.agents
@@ -656,7 +664,6 @@ blacklist ${HOME}/.m2/settings-security.xml
 blacklist ${HOME}/.gradle/gradle.properties
 blacklist ${HOME}/.cabal/config
 
-blacklist /run/user/*/wayland-*
 blacklist /run/user/*/weston.sock
 blacklist /run/user/*/pipewire-*
 blacklist /run/user/*/.flatpak
@@ -688,16 +695,10 @@ nou2f
 noinput
 nodbus
 
-# --- Block GUI access (X11 + Wayland) -------------------------------------
-rmenv DISPLAY
-rmenv WAYLAND_DISPLAY
-rmenv XAUTHORITY
-rmenv XDG_SESSION_TYPE
-blacklist /tmp/.X11-unix
+# --- Display & clipboard access (X11 + Wayland) ---------------------------
+# Allow DISPLAY, WAYLAND_DISPLAY, XAUTHORITY, and XDG_SESSION_TYPE so agents
+# can access the system clipboard (xclip, wl-copy, etc.).
 blacklist /tmp/.ICE-unix
-blacklist ${RUNUSER}/wayland-*
-blacklist ${RUNUSER}/.mutter-Xwaylandauth.*
-blacklist ${HOME}/.Xauthority
 blacklist ${HOME}/.ICEauthority
 
 disable-mnt

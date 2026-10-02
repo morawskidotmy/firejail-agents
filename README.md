@@ -109,6 +109,7 @@ So the agent can actually do its job:
 - Shim/bin trees (`~/.volta/bin`, `~/.cargo/bin`, `~/.local/bin`, …) —
   **read-only** so the agent can run them but can't replace them
 - DNS + outbound network for package installs and API calls
+- System clipboard access via X11 / Wayland (`xclip`, `wl-copy`, …)
 
 ## Install
 

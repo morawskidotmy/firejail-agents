@@ -37,6 +37,8 @@ constraint and continue with sandbox-safe alternatives.
   `$CONTAINER_HOST` (if exported). `podman ps`, `podman build`,
   `podman run` work — but the containers run **on the host**, outside
   this sandbox.
+- **Access the system clipboard** via X11 / Wayland tools (`xclip`,
+  `xsel`, `wl-copy`, `wl-paste`).
 
 ## What you CANNOT do (and must not try to work around)
 
@@ -75,8 +77,8 @@ constraint and continue with sandbox-safe alternatives.
   processes.
 - **No `/dev` access** beyond a minimal whitelist: no sound, no video,
   no input devices, no `/dev/kvm`, no raw disks.
-- **No D-Bus, no X11/Wayland access** (unless the profile carved it
-  out). GUI apps will not launch.
+- **No D-Bus access.** X11/Wayland display sockets are available so
+  clipboard tools work, but GUI apps should not be launched.
 - **You cannot install global packages** that need root (`apt`, `dnf`,
   `pacman`, `brew install` to system prefixes). Use per-project /
   per-user managers (`uv`, `pipx`, `npm i` in the project, `cargo
