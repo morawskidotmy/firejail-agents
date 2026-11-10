@@ -14,4 +14,8 @@ read-only ${HOME}/.config/opencode
 # are reachable via loopback since the jail shares the host network namespace.
 # Configure the provider baseURL with 127.0.0.1, not "localhost".
 
+# Local-path plugins from opencode.jsonc ("plugin": ["/abs/path"]) resolve
+# OUTSIDE the whitelisted dirs and fail to load with stat ENOENT. Whitelist
+# each plugin dir in opencode.local (see that file for an example).
+
 include code-agent.profile
